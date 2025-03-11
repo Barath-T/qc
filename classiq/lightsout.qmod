@@ -1,49 +1,49 @@
 qfunc myoracle(flip: qbit[9], tile: qbit[9], res: qbit){
-    CX(flip[0], tile[0]);
-    CX(flip[0], tile[1]);
-    CX(flip[0], tile[3]);
-    CX(flip[1], tile[0]);
-    CX(flip[1], tile[1]);
-    CX(flip[1], tile[2]);
-    CX(flip[1], tile[4]);
-    CX(flip[2], tile[1]);
-    CX(flip[2], tile[2]);
-    CX(flip[2], tile[5]);
-    CX(flip[3], tile[0]);
-    CX(flip[3], tile[3]);
-    CX(flip[3], tile[4]);
-    CX(flip[3], tile[6]);
-    CX(flip[4], tile[1]);
-    CX(flip[4], tile[3]);
-    CX(flip[4], tile[4]);
-    CX(flip[4], tile[5]);
-    CX(flip[4], tile[7]);
-    CX(flip[5], tile[2]);
-    CX(flip[5], tile[4]);
-    CX(flip[5], tile[5]);
-    CX(flip[5], tile[8]);
-    CX(flip[6], tile[3]);
-    CX(flip[6], tile[6]);
-    CX(flip[6], tile[7]);
-    CX(flip[7], tile[4]);
-    CX(flip[7], tile[6]);
-    CX(flip[7], tile[7]);
-    CX(flip[7], tile[8]);
-    CX(flip[8], tile[5]);
-    CX(flip[8], tile[7]);
-    CX(flip[8], tile[8]);
-    
     within{
-      repeat(i: 9){
-      X(tile[i]);
-      }
+      CX(flip[0], tile[0]);
+      CX(flip[0], tile[1]);
+      CX(flip[0], tile[3]);
+      CX(flip[1], tile[0]);
+      CX(flip[1], tile[1]);
+      CX(flip[1], tile[2]);
+      CX(flip[1], tile[4]);
+      CX(flip[2], tile[1]);
+      CX(flip[2], tile[2]);
+      CX(flip[2], tile[5]);
+      CX(flip[3], tile[0]);
+      CX(flip[3], tile[3]);
+      CX(flip[3], tile[4]);
+      CX(flip[3], tile[6]);
+      CX(flip[4], tile[1]);
+      CX(flip[4], tile[3]);
+      CX(flip[4], tile[4]);
+      CX(flip[4], tile[5]);
+      CX(flip[4], tile[7]);
+      CX(flip[5], tile[2]);
+      CX(flip[5], tile[4]);
+      CX(flip[5], tile[5]);
+      CX(flip[5], tile[8]);
+      CX(flip[6], tile[3]);
+      CX(flip[6], tile[6]);
+      CX(flip[6], tile[7]);
+      CX(flip[7], tile[4]);
+      CX(flip[7], tile[6]);
+      CX(flip[7], tile[7]);
+      CX(flip[7], tile[8]);
+      CX(flip[8], tile[5]);
+      CX(flip[8], tile[7]);
+      CX(flip[8], tile[8]);
     }
     apply{
-      control(tile){
-      X(res);
+      within{
+        repeat(i: 9){
+        X(tile[i]);
+        }
+      }
+      apply{
+          res ^= (tile[0] & tile[1] & tile[2] & tile[3] & tile[4] & tile[5] & tile[6] & tile[7] & tile[8]);
       }
     }
-
 }
 
 qfunc main(output flip: qbit[9]){
@@ -56,10 +56,10 @@ qfunc main(output flip: qbit[9]){
   X(tile[6]);
   X(tile[7]);
   X(tile[8]);
-  hadamard_transform(flip);
   grover_search(17, lambda(vars) {
     phase_oracle(lambda(vars, res){
     myoracle(vars, tile, res);
     }, vars);
   }, flip);
+
 }
